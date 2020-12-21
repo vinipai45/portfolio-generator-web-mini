@@ -3,9 +3,10 @@
 <html>
 
 <head>
-    <title>Portfolio Gen</title>
+    <?php include 'utils/constants.php'; ?>
+    <title><?php echo $page_title ?></title>
     <link rel="stylesheet" href="assets/css/login_page.css" />
-    <script type="text/javascript" src="assets/js/signup.js"></script>
+    <script type="text/javascript" src="assets/js/login.js"></script>
 
 </head>
 
@@ -14,7 +15,7 @@
     <div class="wrapper">
         <div class="form-wrapper">
             <!-- {showLoadingDialog ? <OrangeLoader></OrangeLoader> : <div> -->
-            <h1>Sign Up</h1>
+            <h1>WELCOME USER</h1>
             <form onsubmit="event.preventDefault();">
                 <div class="userName">
                     <label htmlFor="userName">
@@ -28,21 +29,15 @@
                     </label>
                     <input class="passwordInput" placeholder="password" type="password"></input>
                 </div>
-                <div class="password">
-                    <label htmlFor="password-re">
-                        re-enter password
-                    </label>
-                    <input class="passwordInput" placeholder="re-enter password" type="password"></input>
+                <div class="buttonDiv">
+
+                    <button class="loginBtn" id="loginBtn">Login</button>
+
+
                 </div>
                 <div class="buttonDiv">
 
                     <button class="loginBtn" id="signUpBtn">Sign Up</button>
-
-
-                </div>
-                <div class="buttonDiv">
-
-                    <button class="loginBtn" id="loginBtn">Login</button>
 
                 </div>
             </form>

@@ -2,10 +2,12 @@
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-    <title>PORTFOLIO GENERATOR</title>
+    
+    <?php include 'utils/constants.php'; ?>
+    <title><?php echo $page_title ?></title>
 
 
     <!-- Google Fonts -->
