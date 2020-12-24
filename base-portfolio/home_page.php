@@ -35,7 +35,6 @@ $services = mysqli_fetch_all($services_result, MYSQLI_ASSOC);
 $skills = mysqli_fetch_all($skills_result, MYSQLI_ASSOC);
 $resume = mysqli_fetch_all($resume_result, MYSQLI_ASSOC);
 
-
 // print_r($professions[0]);
 // print_r($projects);
 
@@ -263,7 +262,8 @@ mysqli_close($conn);
                             <div class="progress">
                                 <span class="skill"><?php echo $skill['skill']; ?> <i class="val"><?php echo $skill['percentage'] . "%"; ?></i></span>
                                 <div class="progress-bar-wrap">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="<?php echo $skill['percentage']; ?>" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
                                 </div>
                             </div>
                         <?php } ?>
@@ -327,7 +327,9 @@ mysqli_close($conn);
                 </div>
 
                 <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
+
                     <?php foreach ($projects as $project) { ?>
+
                         <div class="col-lg-4 col-md-6 portfolio-item filter-app">
                             <div class="portfolio-wrap">
                                 <img src="<?php echo $project['image_url']; ?>" class="img-fluid" alt="">
@@ -337,8 +339,11 @@ mysqli_close($conn);
                                 </div>
                             </div>
                         </div>
+
                     <?php } ?>
+
                 </div>
+
 
             </div>
         </section>
