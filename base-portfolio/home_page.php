@@ -1,3 +1,81 @@
+<?php include 'utils/constants.php'; ?>
+<?php
+
+
+include('services/db_service.php');
+//get id from url params
+$user_id = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+$home_path = "home_page.php?" . $user_id;
+
+// write query for all user data
+$user_detalis_query = 'SELECT * FROM users WHERE id =' . $user_id;
+$professions_query = 'SELECT * FROM professions WHERE id =' . $user_id;
+$projects_query = 'SELECT * FROM projects WHERE id =' . $user_id;
+$services_query = 'SELECT * FROM services WHERE id =' . $user_id;
+$skills_query = 'SELECT * FROM skills WHERE id =' . $user_id;
+$resume_query = 'SELECT * FROM resume WHERE id =' . $user_id;
+
+
+
+
+// get the result set (set of rows)
+$user_details_result = mysqli_query($conn, $user_detalis_query);
+$professions_result = mysqli_query($conn, $professions_query);
+$projects_result = mysqli_query($conn, $projects_query);
+$services_result = mysqli_query($conn, $services_query);
+$skills_result = mysqli_query($conn, $skills_query);
+$resume_result = mysqli_query($conn, $resume_query);
+
+
+// fetch the user_details_resulting rows as an array
+$user_details = mysqli_fetch_all($user_details_result, MYSQLI_ASSOC);
+$professions = mysqli_fetch_all($professions_result, MYSQLI_ASSOC);
+$projects = mysqli_fetch_all($projects_result, MYSQLI_ASSOC);
+$services = mysqli_fetch_all($services_result, MYSQLI_ASSOC);
+$skills = mysqli_fetch_all($skills_result, MYSQLI_ASSOC);
+$resume = mysqli_fetch_all($resume_result, MYSQLI_ASSOC);
+
+
+// print_r($professions[0]);
+// print_r($projects);
+
+
+
+//split resume array into 2 for the ui
+$resume_split = array_chunk($resume, ceil(count($resume) / 2));
+
+// print_r($resume_split[0]);
+
+//profession string for the animation
+$profession_string = "";
+
+$i = 0;
+foreach ($professions as $x => $val) {
+
+    if ($i == count($professions) - 1) {
+        $profession_string = $profession_string . $val['type'];
+    } else {
+        $profession_string = $profession_string . $val['type'] . ", ";
+    }
+    $i++;
+}
+
+
+// free the $user_details_result from memory (good practise)
+mysqli_free_result($user_details_result);
+mysqli_free_result($professions_result);
+mysqli_free_result($projects_result);
+mysqli_free_result($services_result);
+mysqli_free_result($skills_result);
+mysqli_free_result($resume_result);
+
+
+// close connection
+mysqli_close($conn);
+?>
+
+<!-- UI -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +83,7 @@
 
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    
+
     <?php include 'utils/constants.php'; ?>
     <title><?php echo $page_title ?></title>
 
@@ -35,20 +113,23 @@
         <div class="d-flex flex-column">
 
             <div class="profile">
-                <img src="assets/img/profile-img.jpg" alt="" class="img-fluid rounded-circle">
+
+                <img src="<?php echo $user_details[0]['profile_photo_url']; ?>" alt="" class="img-fluid rounded-circle">
+
                 <h1 class="text-light"><a href="home_page.html">John Smith</a></h1>
                 <div class="social-links mt-3 text-center">
-                    <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                    <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                    <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                    <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                    <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+                    <!-- change to github icon -->
+                    <a href="<?php echo $user_details[0]['github_url']; ?>" class="twitter"><i class="bx bxl-twitter"></i></a>
+                    <a href="<?php echo $user_details[0]['instagram_url']; ?>" class="instagram"><i class="bx bxl-instagram"></i></a>
+                    <a href="<?php echo $user_details[0]['linkedin_url']; ?>" class="linkedin"><i class="bx bxl-linkedin"></i></a>
                 </div>
             </div>
 
             <nav class="nav-menu">
                 <ul>
-                    <li class="active"><a href="home_page.html"><i class="bx bx-home"></i> <span>Home</span></a></li>
+
+                    <li class="active"><a href="<?php echo $home_path; ?>"> <i class="bx bx-home"></i> <span>Home</span>
+                        </a></li>
                     <li><a href="#about"><i class="bx bx-user"></i> <span>About</span></a></li>
                     <li><a href="#resume"><i class="bx bx-file-blank"></i> <span>Resume</span></a></li>
                     <li><a href="#portfolio"><i class="bx bx-book-content"></i> Portfolio</a></li>
@@ -65,8 +146,8 @@
     <!--  Hero Section  -->
     <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
         <div class="hero-container" data-aos="fade-in">
-            <h1>John Smith</h1>
-            <p>I'm <span class="typed" data-typed-items="Designer, Developer, Freelancer, Photographer"></span></p>
+            <h1><?php echo $user_details[0]['name']; ?></h1>
+            <p>I'm <span class="typed" data-typed-items="<?php echo $profession_string; ?>"></span></p>
         </div>
     </section>
     <!-- End Hero -->
@@ -79,38 +160,38 @@
 
                 <div class="section-title">
                     <h2>About</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique eos maxime ipsum modi iusto veritatis eligendi nulla aperiam quidem, sequi voluptatum esse, blanditiis magni iure dignissimos officia tempore? Maxime, veritatis.</p>
+                    <p><?php echo $user_details[0]['about_1']; ?></p>
                 </div>
 
                 <div class="row">
                     <div class="col-lg-4" data-aos="fade-right">
-                        <img src="assets/img/profile-img.jpg" class="img-fluid" alt="">
+                        <img src="<?php echo $user_details[0]['profile_photo_url']; ?>" class="img-fluid" alt="">
                     </div>
                     <div class="col-lg-8 pt-4 pt-lg-0 content" data-aos="fade-left">
-                        <h3>UI/UX Designer &amp; Web Developer.</h3>
+                        <h3> <?php echo $user_details[0]['main_profession']; ?></h3>
                         <p class="font-italic">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            <?php echo $user_details[0]['about_2']; ?>
                         </p>
                         <div class="row">
                             <div class="col-lg-6">
                                 <ul>
-                                    <li><i class="icofont-rounded-right"></i> <strong>Birthday:</strong> 1 May 1995</li>
-                                    <li><i class="icofont-rounded-right"></i> <strong>Website:</strong> www.example.com</li>
-                                    <li><i class="icofont-rounded-right"></i> <strong>Phone:</strong> +123 456 7890</li>
-                                    <li><i class="icofont-rounded-right"></i> <strong>City:</strong> New York, USA</li>
+                                    <li><i class="icofont-rounded-right"></i> <strong>Birthday:</strong> <?php echo $user_details[0]['birthday']; ?></li>
+                                    <li><i class="icofont-rounded-right"></i> <strong>Website:</strong><?php echo $user_details[0]['website']; ?></li>
+                                    <li><i class="icofont-rounded-right"></i> <strong>Phone:</strong><?php echo $user_details[0]['phone']; ?></li>
+                                    <li><i class="icofont-rounded-right"></i> <strong>City:</strong><?php echo $user_details[0]['city']; ?></li>
                                 </ul>
                             </div>
                             <div class="col-lg-6">
                                 <ul>
-                                    <li><i class="icofont-rounded-right"></i> <strong>Age:</strong> 30</li>
-                                    <li><i class="icofont-rounded-right"></i> <strong>Degree:</strong> Master</li>
-                                    <li><i class="icofont-rounded-right"></i> <strong>PhEmailone:</strong> email@example.com</li>
-                                    <li><i class="icofont-rounded-right"></i> <strong>Freelance:</strong> Available</li>
+                                    <li><i class="icofont-rounded-right"></i> <strong>Age:</strong> <?php echo $user_details[0]['age']; ?></li>
+                                    <li><i class="icofont-rounded-right"></i> <strong>Degree:</strong><?php echo $user_details[0]['degree']; ?></li>
+                                    <li><i class="icofont-rounded-right"></i> <strong>PhEmailone:</strong><?php echo $user_details[0]['email']; ?></li>
+                                    <!-- <li><i class="icofont-rounded-right"></i> <strong>Freelance:</strong> Available</li> -->
                                 </ul>
                             </div>
                         </div>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda, quod tenetur, autem, a neque itaque odit aspernatur doloremque consectetur veniam esse optio debitis cum alias libero. Officia quisquam omnis illo.
+                            <?php echo $user_details[0]['about_3']; ?>
                         </p>
                     </div>
                 </div>
@@ -125,7 +206,7 @@
 
                 <div class="section-title">
                     <h2>Facts</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim commodi hic et voluptates sed, fugit mollitia perferendis aut tenetur aperiam veniam ad rem ipsam eius. Odit rerum veniam voluptatem eligendi?</p>
+                    <p><?php echo $user_details[0]['facts']; ?></p>
                 </div>
 
                 <div class="row no-gutters">
@@ -133,7 +214,7 @@
                     <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up">
                         <div class="count-box">
                             <i class="icofont-simple-smile"></i>
-                            <span data-toggle="counter-up">232</span>
+                            <span data-toggle="counter-up"><?php echo $user_details[0]['clients']; ?></span>
                             <p><strong>Happy Clients</strong> Happy Clients</p>
                         </div>
                     </div>
@@ -141,7 +222,7 @@
                     <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="100">
                         <div class="count-box">
                             <i class="icofont-document-folder"></i>
-                            <span data-toggle="counter-up">521</span>
+                            <span data-toggle="counter-up"><?php echo $user_details[0]['projects']; ?></span>
                             <p><strong>Projects</strong> <br> Projects</p>
                         </div>
                     </div>
@@ -149,7 +230,7 @@
                     <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="200">
                         <div class="count-box">
                             <i class="icofont-live-support"></i>
-                            <span data-toggle="counter-up">1,463</span>
+                            <span data-toggle="counter-up"><?php echo $user_details[0]['hours']; ?></span>
                             <p><strong>Hours Of Support</strong> Hours Of Support</p>
                         </div>
                     </div>
@@ -157,7 +238,7 @@
                     <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up" data-aos-delay="300">
                         <div class="count-box">
                             <i class="icofont-users-alt-5"></i>
-                            <span data-toggle="counter-up">15</span>
+                            <span data-toggle="counter-up"><?php echo $user_details[0]['workers']; ?></span>
                             <p><strong>Hard Workers</strong> Hard Workers</p>
                         </div>
                     </div>
@@ -174,58 +255,18 @@
 
                 <div class="section-title">
                     <h2>Skills</h2>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Maxime cupiditate numquam autem eum porro fugit ad cumque perferendis harum. Necessitatibus consequuntur eius quibusdam adipisci quam voluptas eos rem impedit sint.</p>
+                    <p><?php echo $user_details[0]['skills']; ?></p>
                 </div>
-
                 <div class="row skills-content">
-
                     <div class="col-lg-6" data-aos="fade-up">
-
-                        <div class="progress">
-                            <span class="skill">HTML <i class="val">100%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        <?php foreach ($skills as $skill) { ?>
+                            <div class="progress">
+                                <span class="skill"><?php echo $skill['skill']; ?> <i class="val"><?php echo $skill['percentage'] . "%"; ?></i></span>
+                                <div class="progress-bar-wrap">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="progress">
-                            <span class="skill">CSS <i class="val">90%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-
-                        <div class="progress">
-                            <span class="skill">JavaScript <i class="val">75%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-
-                        <div class="progress">
-                            <span class="skill">PHP <i class="val">80%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-
-                        <div class="progress">
-                            <span class="skill">WordPress/CMS <i class="val">90%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-
-                        <div class="progress">
-                            <span class="skill">Photoshop <i class="val">55%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
+                        <?php } ?>
 
                     </div>
 
@@ -245,57 +286,21 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-6" data-aos="fade-up">
-                        <h3 class="resume-title">Sumary</h3>
-                        <div class="resume-item pb-0">
-                            <h4>John Smith</h4>
-                            <p><em>Innovative Graphic Designer with 3+ years of experience designing and developing user-centered digital/print marketing material from initial concept to final, polished deliverable.</em></p>
-                            <ul>
-                                <li>Portland par 127,Orlando, FL</li>
-                                <li>(123) 456-7891</li>
-                                <li>alice.barkley@example.com</li>
-                            </ul>
-                        </div>
+                    <?php foreach ($resume_split as $resume) { ?>
 
-                        <h3 class="resume-title">Education</h3>
-                        <div class="resume-item">
-                            <h4>Master of Fine Arts &amp; Graphic Design</h4>
-                            <h5>2015 - 2016</h5>
-                            <p><em>ABC COLLEGE, NY</em></p>
-                            <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tenetur quidem delectus consectetur sequi. Sed fugit inventore quod officia quas eum facere itaque cumque repellendus blanditiis, veniam, aliquam provident aliquid odit.</p>
+                        <div class="col-lg-6" data-aos="fade-up">
+                            <?php foreach ($resume as $data) { ?>
+                                <!-- <h3 class="resume-title">Education</h3> -->
+                                <div class="resume-item">
+                                    <h4><?php echo $data['title']; ?></h4>
+                                    <h5><?php echo $data['start_year']; ?> - <?php echo $data['end_year']; ?></h5>
+                                    <p><em><?php echo $data['place']; ?></em></p>
+                                    <p><?php echo $data['description']; ?></p>
+                                </div>
+                            <?php } ?>
+
                         </div>
-                        <div class="resume-item">
-                            <h4>Bachelor of Fine Arts &amp; Graphic Design</h4>
-                            <h5>2010 - 2014</h5>
-                            <p><em>ABC COLLEGE, NY</em></p>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde accusamus facere pariatur magnam quia at? Perferendis eligendi excepturi hic cum dolores illum amet aliquam itaque, molestias vitae sunt eveniet repellendus!</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-                        <h3 class="resume-title">Professional Experience</h3>
-                        <div class="resume-item">
-                            <h4>Senior graphic design specialist</h4>
-                            <h5>2019 - Present</h5>
-                            <p><em>Experion, New York, NY </em></p>
-                            <ul>
-                                <li>Lead in the design, development, and implementation of the graphic, layout, and production communication materials</li>
-                                <li>Delegate tasks to the 7 members of the design team and provide counsel on all aspects of the project. </li>
-                                <li>Supervise the assessment of all graphic materials in order to ensure quality and accuracy of the design</li>
-                                <li>Oversee the efficient use of production project budgets ranging from $2,000 - $25,000</li>
-                            </ul>
-                        </div>
-                        <div class="resume-item">
-                            <h4>Graphic design specialist</h4>
-                            <h5>2017 - 2018</h5>
-                            <p><em>Stepping Stone Advertising, New York, NY</em></p>
-                            <ul>
-                                <li>Developed numerous marketing programs (logos, brochures,infographics, presentations, and advertisements).</li>
-                                <li>Managed up to 5 projects or tasks at a given time while under pressure</li>
-                                <li>Recommended and consulted with clients on the most appropriate graphic design</li>
-                                <li>Created 4+ design presentations and proposals a month for clients and account managers</li>
-                            </ul>
-                        </div>
-                    </div>
+                    <?php } ?>
                 </div>
 
             </div>
@@ -308,112 +313,31 @@
 
                 <div class="section-title">
                     <h2>Portfolio</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque voluptatibus quia vero illo maiores sint, perferendis labore totam iste, consequatur necessitatibus porro corporis deserunt quas cum omnis cumque asperiores officiis.</p>
+                    <p><?php echo $user_details[0]['portfolio']; ?></p>
                 </div>
 
                 <div class="row" data-aos="fade-up">
                     <div class="col-lg-12 d-flex justify-content-center">
                         <ul id="portfolio-flters">
                             <li data-filter="*" class="filter-active">All</li>
-                            <li data-filter=".filter-app">App</li>
-                            <li data-filter=".filter-card">Card</li>
-                            <li data-filter=".filter-web">Web</li>
+                            <!-- <li data-filter=".filter-app">App</li>
+                            <li data-filter=".filter-web">Web</li> -->
                         </ul>
                     </div>
                 </div>
 
                 <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="100">
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-1.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-1.jpg" data-gall="portfolioGallery" class="venobox" title="App 1"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
+                    <?php foreach ($projects as $project) { ?>
+                        <div class="col-lg-4 col-md-6 portfolio-item filter-app">
+                            <div class="portfolio-wrap">
+                                <img src="<?php echo $project['image_url']; ?>" class="img-fluid" alt="">
+                                <div class="portfolio-links">
+                                    <a href="<?php echo $project['link']; ?>" data-gall="portfolioGallery" class="venobox" title="App 1"><i class="bx bx-plus"></i></a>
+                                    <a href="<?php echo $project['link']; ?>" title=" More Details"><i class="bx bx-link"></i></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-2.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-2.jpg" data-gall="portfolioGallery" class="venobox" title="Web 3"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-3.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-3.jpg" data-gall="portfolioGallery" class="venobox" title="App 2"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-4.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-4.jpg" data-gall="portfolioGallery" class="venobox" title="Card 2"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-5.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-5.jpg" data-gall="portfolioGallery" class="venobox" title="Web 2"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-app">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-6.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-6.jpg" data-gall="portfolioGallery" class="venobox" title="App 3"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-7.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-7.jpg" data-gall="portfolioGallery" class="venobox" title="Card 1"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-card">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-8.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-8.jpg" data-gall="portfolioGallery" class="venobox" title="Card 3"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6 portfolio-item filter-web">
-                        <div class="portfolio-wrap">
-                            <img src="assets/img/portfolio/portfolio-9.jpg" class="img-fluid" alt="">
-                            <div class="portfolio-links">
-                                <a href="assets/img/portfolio/portfolio-9.jpg" data-gall="portfolioGallery" class="venobox" title="Web 3"><i class="bx bx-plus"></i></a>
-                                <a href="portfolio-details.html" title="More Details"><i class="bx bx-link"></i></a>
-                            </div>
-                        </div>
-                    </div>
-
+                    <?php } ?>
                 </div>
 
             </div>
@@ -426,41 +350,17 @@
 
                 <div class="section-title">
                     <h2>Services</h2>
-                    <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi
-                        quidem hic quas.</p>
+                    <p><?php echo $user_details[0]['services']; ?></p>
                 </div>
 
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up">
-                        <div class="icon"><i class="icofont-computer"></i></div>
-                        <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-                        <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
-                    </div>
-                    <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="100">
-                        <div class="icon"><i class="icofont-chart-bar-graph"></i></div>
-                        <h4 class="title"><a href="">Dolor Sitema</a></h4>
-                        <p class="description">Minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat tarad limino ata</p>
-                    </div>
-                    <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="200">
-                        <div class="icon"><i class="icofont-earth"></i></div>
-                        <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-                        <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-                    </div>
-                    <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="300">
-                        <div class="icon"><i class="icofont-image"></i></div>
-                        <h4 class="title"><a href="">Magni Dolores</a></h4>
-                        <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-                    </div>
-                    <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="400">
-                        <div class="icon"><i class="icofont-settings"></i></div>
-                        <h4 class="title"><a href="">Nemo Enim</a></h4>
-                        <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
-                    </div>
-                    <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up" data-aos-delay="500">
-                        <div class="icon"><i class="icofont-tasks-alt"></i></div>
-                        <h4 class="title"><a href="">Eiusmod Tempor</a></h4>
-                        <p class="description">Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi</p>
-                    </div>
+                    <?php foreach ($services as $service) { ?>
+                        <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up">
+                            <div class="icon"><i class="icofont-computer"></i></div>
+                            <h4 class="title"><a href=""><?php echo $service['service']; ?></a></h4>
+                            <p class="description"><?php echo $service['description']; ?></p>
+                        </div>
+                    <?php } ?>
                 </div>
 
             </div>

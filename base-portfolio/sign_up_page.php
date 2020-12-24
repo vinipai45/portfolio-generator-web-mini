@@ -47,26 +47,22 @@ if (isset($_POST['submit'])) {
     if (array_filter($errors)) {
         //echo 'errors in form';
     } else {
+     
         //echo 'form is valid';
-        if (array_filter($errors)) {
-            //echo 'errors in form';
+        // escape sql chars
+        $name = mysqli_real_escape_string($conn, $_POST['user_name']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
+        $password_re = mysqli_real_escape_string($conn, $_POST['password_re']);
+
+        // create sql
+        $sql = "INSERT INTO users(name,password,password_re) VALUES('$name','$password','$password_re')";
+
+        // save to db and check
+        if (mysqli_query($conn, $sql)) {
+            // success
+            header('Location: index.php');
         } else {
-            //echo 'form is valid';
-            // escape sql chars
-            $name = mysqli_real_escape_string($conn, $_POST['user_name']);
-            $password = mysqli_real_escape_string($conn, $_POST['password']);
-            $password_re = mysqli_real_escape_string($conn, $_POST['password_re']);
-
-            // create sql
-            $sql = "INSERT INTO users(name,password,password_re) VALUES('$name','$password','$password_re')";
-
-            // save to db and check
-            if (mysqli_query($conn, $sql)) {
-                // success
-                header('Location: index.php');
-            } else {
-                echo 'query error: ' . mysqli_error($conn);
-            }
+            echo 'query error: ' . mysqli_error($conn);
         }
     }
 
