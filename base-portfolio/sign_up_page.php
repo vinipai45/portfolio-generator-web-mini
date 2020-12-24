@@ -12,7 +12,9 @@ include('services/db_service.php');
 $user_name = $password = $password_re = '';
 $errors = array('user_name' => '', 'password' => '', 'password_re' => '');
 
-
+if (isset($_POST['login'])) {
+    header('Location: index.php');
+}
 //post
 if (isset($_POST['submit'])) {
     // check user_name
@@ -47,7 +49,7 @@ if (isset($_POST['submit'])) {
     if (array_filter($errors)) {
         //echo 'errors in form';
     } else {
-     
+
         //echo 'form is valid';
         // escape sql chars
         $name = mysqli_real_escape_string($conn, $_POST['user_name']);
@@ -122,7 +124,7 @@ if (isset($_POST['submit'])) {
                     <button name="submit" type="submit" class="loginBtn" id="signUpBtn">Sign Up</button>
                 </div>
                 <div class="buttonDiv">
-                    <button class="loginBtn" id="loginBtn">Login</button>
+                    <button name="login" class="loginBtn" id="loginBtn">Login</button>
                 </div>
             </form>
 

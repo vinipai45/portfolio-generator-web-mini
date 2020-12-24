@@ -332,7 +332,7 @@ mysqli_close($conn);
                             <div class="portfolio-wrap">
                                 <img src="<?php echo $project['image_url']; ?>" class="img-fluid" alt="">
                                 <div class="portfolio-links">
-                                    <a href="<?php echo $project['link']; ?>" data-gall="portfolioGallery" class="venobox" title="App 1"><i class="bx bx-plus"></i></a>
+                                    <a href="<?php echo $project['image_url']; ?>" data-gall="portfolioGallery" class="venobox" title="App 1"><i class="bx bx-plus"></i></a>
                                     <a href="<?php echo $project['link']; ?>" title=" More Details"><i class="bx bx-link"></i></a>
                                 </div>
                             </div>
