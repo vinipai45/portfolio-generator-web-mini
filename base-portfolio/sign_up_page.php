@@ -7,7 +7,17 @@ add all fields
 <?php
 
 
-include('services/db_service.php');
+include 'services/db_service.php';
+include 'utils/sample_data.php';
+include 'utils/query_functions.php';
+
+//use this id for the insertion queries
+
+$current_user_id = $last_id + 1;
+print_r($current_user_id);
+
+
+
 
 $user_name = $password = $password_re = '';
 $errors = array('user_name' => '', 'password' => '', 'password_re' => '');
@@ -54,13 +64,83 @@ if (isset($_POST['submit'])) {
         // escape sql chars
         $name = mysqli_real_escape_string($conn, $_POST['user_name']);
         $password = mysqli_real_escape_string($conn, $_POST['password']);
-        $password_re = mysqli_real_escape_string($conn, $_POST['password_re']);
 
-        // create sql
-        $sql = "INSERT INTO users(name,password,password_re) VALUES('$name','$password','$password_re')";
+
+
+
+
+
+
+
+
+
+        //new user data insert query 
+        $register_new_user_query = "INSERT INTO users(`id`, `name`, `about_1`, `about_2`, `about_3`, `main_profession`, `birthday`, `website`, `phone`, `city`, `age`, `degree`, `email`, `facts`, `clients`, `projects`, `hours`, `workers`, `skills`, `portfolio`, `services`, `profile_photo_url`, `github_url`, `linkedin_url`, `instagram_url`)
+         VALUES (NULL, '$name', '$about_1', '$about_2', '$about_3', '$main_profession', '$birthday', '$website', '$phone', '$city', '$age', '$degree', '$email', '$facts', '$clients', '$projects', '$hours', '$workers', '$skills', '$portfolio', '$services', '$profile_photo_url', '$github_url', '$linkedin_url', '$instagram_url')";
+        // echo ($register_new_user_query);
+
+        //professions instertion query
+        $professions_array_new = array();
+        foreach ($professions_array as $x => $val) {
+            array_push($professions_array_new, "'$val'");
+        }
+        $professions_insert_query = formulate_query("INSERT INTO `professions` (`id`, `type`) VALUES", $professions_array_new, $current_user_id);
+        // print_r($professions_insert_query);
+
+
+        //projects instertion query
+        $projects_array_new = array();
+
+        foreach ($porject_name_array as $x => $val) {
+            array_push($projects_array_new, "'$val','$project_image_url_array[$x]','$project_link_array[$x]'");
+        }
+        $projects_insert_query = formulate_query("INSERT INTO `projects` (`id`, `name`, `image_url`, `link`) VALUES", $projects_array_new, $current_user_id);
+        // print_r($projects_insert_query);
+
+        //services instertion query
+        $services_array_new = array();
+        foreach ($services_array as $x => $val) {
+            array_push($services_array_new, "'$val','$services_description_array[$x]'");
+        }
+        $services_insert_query = formulate_query("INSERT INTO `services` (`id`, `service`, `description`) VALUES", $services_array_new, $current_user_id);
+        // print_r($services_insert_query);
+
+
+        //resume instertion query
+        $resume_array_new = array();
+        foreach ($resume_title_array as $x => $val) {
+            array_push($resume_array_new, "'$val','$resume_start_date_array[$x]','$resume_end_date_array[$x]','$resume_place_array[$x]','$resume_description_array[$x]'");
+        }
+        $resume_insert_query = formulate_query("INSERT INTO `resume` (`id`, `title`, `start_year`, `end_year`, `place`, `description`) VALUES", $resume_array_new, $current_user_id);
+        // print_r($resume_insert_query);
+
+        //skills instertion query
+        $skills_array_new = array();
+        foreach ($skills_array as $x => $val) {
+            array_push($skills_array_new, "'$val','$skill_score_array[$x]'");
+        }
+        $skills_insert_query = formulate_query("INSERT INTO `skills` (`id`, `skill`, `percentage`) VALUES", $skills_array_new, $current_user_id);
+        // print_r($skills_insert_query);
+
+
+
+
+
+
+
+        //query executions
+        //mysqli_query($conn, $register_new_user_query)
+        // mysqli_query($conn, $professions_insert_query)
+        // mysqli_query($conn, $projects_insert_query)
+        // mysqli_query($conn, $services_insert_query)
+        // mysqli_query($conn, $resume_insert_query)
+
+
+
+
 
         // save to db and check
-        if (mysqli_query($conn, $sql)) {
+        if (mysqli_query($conn, $register_new_user_query)) {
             // success
             header('Location: index.php');
         } else {
