@@ -35,7 +35,7 @@ $services = mysqli_fetch_all($services_result, MYSQLI_ASSOC);
 $skills = mysqli_fetch_all($skills_result, MYSQLI_ASSOC);
 $resume = mysqli_fetch_all($resume_result, MYSQLI_ASSOC);
 
-// print_r($professions[0]);
+print_r($user_details[0]);
 // print_r($projects);
 
 
@@ -115,7 +115,7 @@ mysqli_close($conn);
 
                 <img src="<?php echo $user_details[0]['profile_photo_url']; ?>" alt="" class="img-fluid rounded-circle">
 
-                <h1 class="text-light"><a href="home_page.html">John Smith</a></h1>
+                <h1 class="text-light"><a href="home_page.html"><?php echo $user_details[0]['name']; ?></a></h1>
                 <div class="social-links mt-3 text-center">
                     <!-- change to github icon -->
                     <a href="<?php echo $user_details[0]['github_url']; ?>" class="twitter"><i class="bx bxl-twitter"></i></a>
@@ -282,7 +282,7 @@ mysqli_close($conn);
 
                 <div class="section-title">
                     <h2>Resume</h2>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam consectetur cupiditate iusto dolorem itaque fuga aliquam, vitae tempora! Quod officiis atque molestiae soluta debitis aut officia quasi nemo ipsum enim!</p>
+                    <p><?php echo $user_details[0]['resume']; ?></p>
                 </div>
 
                 <div class="row">
