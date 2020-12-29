@@ -32,7 +32,7 @@ $instagram_url = "instagram_url";
 //professions list
 $professions_array = array("Designer", "Frelancer", "Developer");
 //projects list
-$porject_name_array = array("website", "app");
+$project_name_array = array("website", "app");
 $project_image_url_array = array("https://i.pinimg.com/564x/d7/00/c8/d700c8bcd88e267f28f305db6b6d5848.jpg", "https://i.pinimg.com/564x/d7/00/c8/d700c8bcd88e267f28f305db6b6d5848.jpg");
 $project_link_array = array("https://www.w3schools.com/php/func_array_push.asp", "https://www.w3schools.com/php/func_array_push.asp");
 

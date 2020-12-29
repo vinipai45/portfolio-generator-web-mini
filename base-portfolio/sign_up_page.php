@@ -91,7 +91,7 @@ if (isset($_POST['submit'])) {
         //projects instertion query
         $projects_array_new = array();
 
-        foreach ($porject_name_array as $x => $val) {
+        foreach ($project_name_array as $x => $val) {
             array_push($projects_array_new, "'$val','$project_image_url_array[$x]','$project_link_array[$x]'");
         }
         $projects_insert_query = formulate_query("INSERT INTO `projects` (`id`, `name`, `image_url`, `link`) VALUES", $projects_array_new, $current_user_id);
