@@ -1,5 +1,5 @@
 <!--
-degree , email , resume, validation , image backgroud , imge circle , logo common , twitter -> git logo , grid bug
+degree , email , resume validation , image backgroud , imge circle , logo common , twitter -> git logo , grid bug , value not workng in large text box might be text color problem
   -->
 <?php include 'utils/constants.php'; ?>
 <?php
@@ -11,17 +11,47 @@ include 'utils/query_functions.php';
 
 //use this id for the insertion queries
 
-$current_user_id = $last_id + 1;
-print_r($current_user_id);
+$user_id = $user_id = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+print_r($user_id);
+
+$update_page_path = "update_profile_page.php?" . $user_id;
+
+include('utils/user_details.php');
+
+print_r($user_details[0]);
 
 
-
-
-$user_name = $password = $password_re = $about_1 = $about_2 = $about_3 = $resume = $main_profession = $phone = $birthday = $city = $age = $degree = $website = $email = $facts = $clients = $hours = $workers = $skills = $portfolio = $profile_photo_url = $github_url = $linkedin_url = $instagram_url = '';
-$errors = array('user_name' => '', 'password' => '', 'password_re' => '', 'degree' => '', 'email' => '', 'resume' => '', 'about_1' => '', 'about_2' => '', 'about_3' => '', 'main_profession' => '', 'birthday' => '', 'website' => '', 'phone' => '', 'city' => '', 'age' => '', 'facts' => '', 'clients' => '', 'projects' => '', 'hours' => '', 'workers' => '', 'skills' => '', 'portfolio' => '', 'services' => '');
+$name = $user_details[0]['name'];
+$password = $user_details[0]['password'];
+$password_re = $user_details[0]['password'];
+$about_1 = $user_details[0]['about_1'];
+$about_2 = $user_details[0]['about_2'];
+$about_3 = $user_details[0]['about_3'];
+$resume = $user_details[0]['resume'];
+$main_profession = $user_details[0]['main_profession'];
+$phone = $user_details[0]['phone'];
+$birthday = $user_details[0]['birthday'];
+$city = $user_details[0]['city'];
+$age = $user_details[0]['age'];
+$degree = $user_details[0]['degree'];
+$website = $user_details[0]['website'];
+$email = $user_details[0]['email'];
+$facts = $user_details[0]['facts'];
+$clients = $user_details[0]['clients'];
+$projects = $user_details[0]['projects'];
+$services = $user_details[0]['services'];
+$hours = $user_details[0]['hours'];
+$workers = $user_details[0]['workers'];
+$skills = $user_details[0]['skills'];
+$portfolio = $user_details[0]['portfolio'];
+$profile_photo_url = $user_details[0]['profile_photo_url'];
+$github_url = $user_details[0]['github_url'];
+$linkedin_url = $user_details[0]['linkedin_url'];
+$instagram_url = $user_details[0]['instagram_url'];
+$errors = array('name' => '', 'password' => '', 'password_re' => '', 'degree' => '', 'email' => '', 'resume' => '', 'about_1' => '', 'about_2' => '', 'about_3' => '', 'main_profession' => '', 'birthday' => '', 'website' => '', 'phone' => '', 'city' => '', 'age' => '', 'facts' => '', 'clients' => '', 'projects' => '', 'hours' => '', 'workers' => '', 'skills' => '', 'portfolio' => '', 'services' => '');
 
 if (isset($_POST['login'])) {
-    header('Location: index.php');
+    // header('Location: index.php');
 }
 //post
 if (isset($_POST['submit'])) {
@@ -30,12 +60,12 @@ if (isset($_POST['submit'])) {
 
     echo ($_POST['main_profession']);
 
-    // check user_name
-    if (empty($_POST['user_name'])) {
+    // check name
+    if (empty($_POST['name'])) {
         echo ('inside username check');
-        $errors['user_name'] = 'a name is required';
+        $errors['name'] = 'a name is required';
     } else {
-        $user_name = $_POST['user_name'];
+        $name = $_POST['name'];
     }
 
     //check about_1
@@ -195,7 +225,7 @@ if (isset($_POST['submit'])) {
         // name="link[]"
 
 
-        $name = mysqli_real_escape_string($conn, $_POST['user_name']);
+        $name = mysqli_real_escape_string($conn, $_POST['name']);
         $password = mysqli_real_escape_string($conn, $_POST['password']);
         $password_re = mysqli_real_escape_string($conn, $_POST['password_re']);
 
@@ -263,22 +293,29 @@ if (isset($_POST['submit'])) {
 
 
 
+        //delete queries
+        $delete_professions_query = "DELETE FROM `professions` WHERE `id` = $user_id";
+        $delete_projects_query = "DELETE FROM `projects` WHERE `id` = $user_id";
+        $delete_services_query = "DELETE FROM `services` WHERE `id` = $user_id";
+        $delete_resume_query = "DELETE FROM `resume` WHERE `id` = $user_id";
+        $delete_skills_query = "DELETE FROM `skills` WHERE `id` = $user_id";
 
 
-
-
-
-        //new user data insert query 
-        $register_new_user_query = "INSERT INTO users(`id`, `name`, `about_1`, `about_2`, `about_3`, `main_profession`, `birthday`, `website`, `phone`, `city`, `age`, `degree`, `email`,`password`, `facts`, `clients`, `projects`, `hours`, `workers`, `skills`, `portfolio`, `services`, `resume`, `profile_photo_url`, `github_url`, `linkedin_url`, `instagram_url`)
-         VALUES (NULL, '$name', '$about_1', '$about_2', '$about_3', '$main_profession', '$birthday', '$website', '$phone', '$city', '$age', '$degree', '$email','$password', '$facts', '$clients', '$projects', '$hours', '$workers', '$skills', '$portfolio', '$services', '$resume','$profile_photo_url', '$github_url', '$linkedin_url', '$instagram_url')";
-        // echo ($register_new_user_query);
+        //insert and update queries
+        //udpate user data query 
+        $update_user_query =  "UPDATE `users` SET `name` = '$name', `about_1` = '$about_1',`about_2` = '$about_2',
+        `about_3` = '$about_3',`main_profession` = '$main_profession',`birthday` = '$birthday',`website` = '$website',`phone` = '$phone',
+        `city` = '$city',`age` = '$age',`degree` = '$degree',`email` = '$email',`password` = '$password',`facts` = '$facts',`clients` = '$clients',
+        `projects` = '$projects',`hours` = '$hours',`workers` = '$workers',`skills` = '$skills',`portfolio` = '$portfolio',`services` = '$services',
+        `resume` = '$resume',`profile_photo_url` = '$profile_photo_url',`github_url` = '$github_url',`linkedin_url` = '$linkedin_url',
+        `instagram_url` = '$instagram_url' WHERE `users`.`id` = $user_id";
 
         //professions instertion query
         $professions_array_new = array();
         foreach ($professions_array as $x => $val) {
             array_push($professions_array_new, "'$val'");
         }
-        $professions_insert_query = formulate_query("INSERT INTO `professions` (`id`, `type`) VALUES", $professions_array_new, $current_user_id);
+        $professions_insert_query = formulate_query("INSERT INTO `professions` (`id`, `type`) VALUES", $professions_array_new, $user_id);
         // print_r($professions_insert_query);
 
 
@@ -288,7 +325,7 @@ if (isset($_POST['submit'])) {
         foreach ($project_name_array as $x => $val) {
             array_push($projects_array_new, "'$val','$project_image_url_array[$x]','$project_link_array[$x]'");
         }
-        $projects_insert_query = formulate_query("INSERT INTO `projects` (`id`, `name`, `image_url`, `link`) VALUES", $projects_array_new, $current_user_id);
+        $projects_insert_query = formulate_query("INSERT INTO `projects` (`id`, `name`, `image_url`, `link`) VALUES", $projects_array_new, $user_id);
         // print_r($projects_insert_query);
 
         //services instertion query
@@ -296,7 +333,7 @@ if (isset($_POST['submit'])) {
         foreach ($services_array as $x => $val) {
             array_push($services_array_new, "'$val','$services_description_array[$x]'");
         }
-        $services_insert_query = formulate_query("INSERT INTO `services` (`id`, `service`, `description`) VALUES", $services_array_new, $current_user_id);
+        $services_insert_query = formulate_query("INSERT INTO `services` (`id`, `service`, `description`) VALUES", $services_array_new, $user_id);
         // print_r($services_insert_query);
 
 
@@ -305,7 +342,7 @@ if (isset($_POST['submit'])) {
         foreach ($resume_title_array as $x => $val) {
             array_push($resume_array_new, "'$val','$resume_start_date_array[$x]','$resume_end_date_array[$x]','$resume_place_array[$x]','$resume_description_array[$x]'");
         }
-        $resume_insert_query = formulate_query("INSERT INTO `resume` (`id`, `title`, `start_year`, `end_year`, `place`, `description`) VALUES", $resume_array_new, $current_user_id);
+        $resume_insert_query = formulate_query("INSERT INTO `resume` (`id`, `title`, `start_year`, `end_year`, `place`, `description`) VALUES", $resume_array_new, $user_id);
         // print_r($resume_insert_query);
 
         //skills instertion query
@@ -313,7 +350,7 @@ if (isset($_POST['submit'])) {
         foreach ($skills_array as $x => $val) {
             array_push($skills_array_new, "'$val','$skill_score_array[$x]'");
         }
-        $skills_insert_query = formulate_query("INSERT INTO `skills` (`id`, `skill`, `percentage`) VALUES", $skills_array_new, $current_user_id);
+        $skills_insert_query = formulate_query("INSERT INTO `skills` (`id`, `skill`, `percentage`) VALUES", $skills_array_new, $user_id);
         // print_r($skills_insert_query);
 
 
@@ -323,7 +360,7 @@ if (isset($_POST['submit'])) {
 
 
         //query executions
-        //mysqli_query($conn, $register_new_user_query)
+        //mysqli_query($conn, $update_user_query)
         // mysqli_query($conn, $professions_insert_query)
         // mysqli_query($conn, $projects_insert_query)
         // mysqli_query($conn, $services_insert_query)
@@ -333,9 +370,14 @@ if (isset($_POST['submit'])) {
 
 
         // save to db and check
-        if (mysqli_query($conn, $register_new_user_query) and mysqli_query($conn, $professions_insert_query) and mysqli_query($conn, $projects_insert_query) and mysqli_query($conn, $services_insert_query) and mysqli_query($conn, $resume_insert_query) and mysqli_query($conn, $skills_insert_query)) {
+        if (
+            mysqli_query($conn, $update_user_query)
+            and mysqli_query($conn, $delete_professions_query) and mysqli_query($conn, $delete_projects_query) and mysqli_query($conn, $delete_services_query) and mysqli_query($conn, $delete_resume_query) and mysqli_query($conn, $delete_skills_query)
+            and mysqli_query($conn, $professions_insert_query) and mysqli_query($conn, $projects_insert_query) and mysqli_query($conn, $services_insert_query) and mysqli_query($conn, $resume_insert_query) and mysqli_query($conn, $skills_insert_query)
+        ) {
             // success
-            header('Location: index.php');
+
+            header('Location: home_page.php?' . $user_id);
         } else {
             echo 'query error: ' . mysqli_error($conn);
         }
@@ -354,6 +396,7 @@ if (isset($_POST['submit'])) {
 <head>
 
     <title><?php echo $page_title ?></title>
+
     <link rel="stylesheet" href="assets/css/signup_page.css" />
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -366,13 +409,13 @@ if (isset($_POST['submit'])) {
 
     <div class="wrapper">
         <div class="form-wrapper">
-            <h1>Sign Up</h1>
-            <form method='POST' action="sign_up_page.php" class="row g-3 needs-validation" novalidate>
+            <h1>Update Profile</h1>
+            <form method='POST' action=<?php echo $update_page_path ?> class="row g-3 needs-validation" novalidate>
 
                 <!-- username -->
                 <div class="col-md-12">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="user_name" id="username" value="<?php echo htmlspecialchars($user_name) ?>" required>
+                    <input type="text" class="form-control" name="name" id="username" value="<?php echo htmlspecialchars($name) ?>" required>
                     <div class="invalid-feedback">
                         username empty
                     </div>
@@ -399,7 +442,9 @@ if (isset($_POST['submit'])) {
                 <!-- about_1 -->
                 <div class="col-md-12">
                     <label for="about_1" class="form-label">About_1</label>
-                    <textarea type="text" class="form-control" name="about_1" id="about_1" value="<?php echo htmlspecialchars($about_1) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="about_1" id="about_1" required>
+                    <?php echo $about_1 ?>
+                </textarea>
                     <div class="invalid-feedback">
                         <?php echo $errors['about_1']; ?>
                     </div>
@@ -408,7 +453,9 @@ if (isset($_POST['submit'])) {
                 <!-- about_2 -->
                 <div class="col-md-12">
                     <label for="about_2" class="form-label">About_2</label>
-                    <textarea type="text" class="form-control" name="about_2" id="about_2" value="<?php echo htmlspecialchars($about_2) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="about_2" id="about_2" required>
+                    <?php echo $about_2 ?>
+                    </textarea>
                     <div class="invalid-feedback">
                         <?php echo $errors['about_2']; ?>
                     </div>
@@ -417,7 +464,9 @@ if (isset($_POST['submit'])) {
                 <!-- about_3 -->
                 <div class="col-md-12">
                     <label for="about_3" class="form-label">About_3</label>
-                    <textarea type="text" class="form-control" name="about_3" id="about_3" value="<?php echo htmlspecialchars($about_3) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="about_3" id="about_3" required>
+                    <?php echo $about_3 ?>
+                    </textarea>
                     <div class="invalid-feedback">
                         <?php echo $errors['about_3']; ?>
                     </div>
@@ -498,7 +547,8 @@ if (isset($_POST['submit'])) {
                 <!-- facts -->
                 <div class="col-md-12">
                     <label for="facts" class="form-label">Facts</label>
-                    <textarea type="text" class="form-control" name="facts" id="facts" value="<?php echo htmlspecialchars($facts) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="facts" id="facts" required>
+                    <?php echo htmlspecialchars($facts) ?></textarea>
                     <div class="invalid-feedback">
                         <p><?php echo $errors['facts']; ?></p>
                     </div>
@@ -516,7 +566,7 @@ if (isset($_POST['submit'])) {
                 <!-- projects -->
                 <div class="col-md-3">
                     <label for="projects" class="form-label">Projects</label>
-                    <input type="number" class="form-control" name="projects" id="projects" value="<?php echo htmlspecialchars($projects) ?>" required>
+                    <input type="number" class="form-control" name="projects" id="projects" value="<?php echo $projects ?>" required>
                     <div class="invalid-feedback">
                         <?php echo $errors['projects']; ?>
                     </div>
@@ -543,7 +593,9 @@ if (isset($_POST['submit'])) {
                 <!-- skills  -->
                 <div class="col-md-12">
                     <label for="skills" class="form-label">Skills</label>
-                    <textarea type="text" class="form-control" name="skills" id="skills" value="<?php echo htmlspecialchars($skills) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="skills" id="skills" required>
+                    <?php echo $skills ?>
+                    </textarea>
                     <div class="invalid-feedback">
                         <p><?php echo $errors['skills']; ?></p>
                     </div>
@@ -552,7 +604,9 @@ if (isset($_POST['submit'])) {
                 <!-- porfolio -->
                 <div class="col-md-12">
                     <label for="portfolio" class="form-label">Portfolio</label>
-                    <textarea type="text" class="form-control" name="portfolio" id="portfolio" value="<?php echo htmlspecialchars($portfolio) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="portfolio" id="portfolio" required>
+                    <?php echo htmlspecialchars($portfolio) ?>
+                    </textarea>
                     <div class="invalid-feedback">
                         <p><?php echo $errors['portfolio']; ?></p>
                     </div>
@@ -561,7 +615,9 @@ if (isset($_POST['submit'])) {
                 <!-- services -->
                 <div class="col-md-12">
                     <label for="services" class="form-label">Services</label>
-                    <textarea type="text" class="form-control" name="services" id="services" value="<?php echo htmlspecialchars($services) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="services" id="services" required>
+                    <?php echo $services ?>
+                    </textarea>
                     <div class="invalid-feedback">
                         <p><?php echo $errors['services']; ?></p>
                     </div>
@@ -570,7 +626,9 @@ if (isset($_POST['submit'])) {
                 <!-- resume -->
                 <div class="col-md-12">
                     <label for="resume" class="form-label">Resume</label>
-                    <textarea type="text" class="form-control" name="resume" id="resume" value="<?php echo htmlspecialchars($resume) ?>" required></textarea>
+                    <textarea type="text" class="form-control" name="resume" id="resume" required>
+                    <?php echo $resume ?>
+                    </textarea>
                     <div class="invalid-feedback">
                         <p><?php echo $errors['services']; ?></p>
                     </div>
@@ -703,9 +761,9 @@ if (isset($_POST['submit'])) {
                     <label htmlFor="userName">
                         User Name
                     </label>
-                    <input name="user_name" placeholder="user name" type="text" value="<?php echo htmlspecialchars($user_name) ?>"></input>
+                    <input name="name" placeholder="user name" type="text" value="<?php echo htmlspecialchars($name) ?>"></input>
                     <div class="red-text">
-                        <?php echo $errors['user_name']; ?>
+                        <?php echo $errors['name']; ?>
                     </div>
                 </div>
                 <div class="password">
@@ -744,8 +802,21 @@ if (isset($_POST['submit'])) {
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="assets/js/signup.js"></script>
+    <script type="text/javascript" src="assets/js/update_profile.js"></script>
+    <script type="text/javascript">
+        <?php include('utils/user_details.php'); ?>;
+        var professions_array = <?php echo json_encode($professions); ?>;
+        var projects_array = <?php echo json_encode($projects); ?>;
+        var services_array = <?php echo json_encode($services); ?>;
+        var skills_array = <?php echo json_encode($skills); ?>;
+        var resume_array = <?php echo json_encode($resume); ?>;
 
+
+
+
+        console.log(resume_array);
+        init_ui(professions_array, projects_array, services_array, skills_array, resume_array);
+    </script>
     <!-- <script>
 
     </script> -->
