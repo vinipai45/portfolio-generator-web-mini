@@ -12,7 +12,7 @@ include 'utils/query_functions.php';
 //use this id for the insertion queries
 
 $current_user_id = $last_id + 1;
-print_r($current_user_id);
+// print_r($current_user_id);
 
 
 

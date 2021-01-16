@@ -3,8 +3,8 @@
 $user_id = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
 $decision_path = "decision_page.php?" . $user_id;
 
-echo $user_id;
-echo "Location: update_profile_page.php?" . $user_id;
+// echo $user_id;
+// echo "Location: update_profile_page.php?" . $user_id;
 
 if (isset($_POST['update-profile'])) {
     // header('Location: update_profile_page.php?1');

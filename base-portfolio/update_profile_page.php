@@ -12,13 +12,13 @@ include 'utils/query_functions.php';
 //use this id for the insertion queries
 
 $user_id = $user_id = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
-print_r($user_id);
+// print_r($user_id);
 
 $update_page_path = "update_profile_page.php?" . $user_id;
 
 include('utils/user_details.php');
 
-print_r($user_details[0]);
+// print_r($user_details[0]);
 
 
 $name = $user_details[0]['name'];
@@ -55,7 +55,7 @@ if (isset($_POST['login'])) {
 //post
 if (isset($_POST['submit'])) {
 
-    echo ('inside submit');
+    // echo ('inside submit');
 
     echo ($_POST['main_profession']);
 
