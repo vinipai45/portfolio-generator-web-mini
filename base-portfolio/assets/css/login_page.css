@@ -1,5 +1,6 @@
 /* Colors */
 
+
 /*
 dark blue: #476A6F
 light blue: #258EA6
@@ -90,7 +91,8 @@ input::placeholder {
     margin-right: 1px;
 }
 
-.userName, .password {
+.userName,
+.password {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;

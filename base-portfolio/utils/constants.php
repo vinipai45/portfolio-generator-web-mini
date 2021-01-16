@@ -1,5 +1,5 @@
 <?php
 $page_title = "PORTFOLIO GENERATOR";
 $db = "portfolio";
-$db_user = "gtx";
-$db_passowrd = "123";
+$db_user = "root";
+$db_passowrd = "vpai31101999";

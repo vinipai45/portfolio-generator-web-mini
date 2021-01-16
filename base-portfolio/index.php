@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
             $user = mysqli_fetch_all($user_result, MYSQLI_ASSOC);
             if (count($user) > 0) {
                 print_r($user[0]['id']);
-                header('Location: home_page.php?' . $user[0]['id']);
+                header('Location: decision_page.php?' . $user[0]['id']);
             } else {
                 $errors['user_password'] = 'email or password is wrong !';
             }
@@ -77,7 +77,8 @@ if (isset($_POST['submit'])) {
     <?php include 'utils/constants.php'; ?>
     <title><?php echo $page_title ?></title>
     <link rel="stylesheet" href="assets/css/login_page.css" />
-    <script type="text/javascript" src="assets/js/login.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
 </head>
 
@@ -86,45 +87,52 @@ if (isset($_POST['submit'])) {
     <div class="wrapper">
         <div class="form-wrapper">
             <!-- {showLoadingDialog ? <OrangeLoader></OrangeLoader> : <div> -->
-            <h1>WELCOME USER</h1>
+            <h2 style="font-family:'san-serif'; text-align:center;">WELCOME</h2>
             <form action="index.php" method="POST">
-                <div class="userName">
-                    <label htmlFor="useremail">
-                        User email
-                    </label>
-                    <input name="user_email" value="<?php echo htmlspecialchars($user_email) ?>" placeholder=" user email" type="text"></input>
-                    <div class="red-text">
+                <div class="col-md-12">
+                    <input type="text" class="form-control" name="user_email" id="username" value="<?php echo htmlspecialchars($user_email) ?>" placeholder=" user email" required>
+                    <div class="invalid-feedback">
+                        <!-- username empty -->
                         <?php echo $errors['user_email']; ?>
                     </div>
                 </div>
-                <div class="password">
-                    <label htmlFor="password">
-                        password
-                    </label>
-                    <input name="user_password" value="<?php echo htmlspecialchars($user_password) ?>" class=" passwordInput" placeholder="password" type="password"></input>
-                    <div class="red-text">
-                        <?php echo $errors['user_password']; ?>
+
+                <div class="col-md-12 mt-3">
+                    <input type="password" class="form-control passwordInput" name="user_password" id="password" value="<?php echo htmlspecialchars($user_password) ?>" placeholder="password" required>
+                    <div class="invalid-feedback">
+                    <?php echo $errors['user_password']; ?>
                     </div>
                 </div>
-                <div class="buttonDiv">
-
+                <!-- <div class="buttonDiv">
                     <button name="submit" type="submit" class="loginBtn" id="loginBtn">Login</button>
+                </div> -->
 
-
+                <div class="col-12 buttonDiv">
+                    <!-- <button name="submit" type="submit" class="btn btn-primary loginBtn" id="loginBtn">Login</button> -->
+                    <button name ="submit" type="submit" class="btn btn-primary loginBtn" id="loginBtn">Login<i class="fa fa-sign-in"></i></button>
                 </div>
+<!-- 
                 <div class="buttonDiv">
-
                     <button name="signup" class="loginBtn" id="signUpBtn">Sign Up</button>
-
-                </div>
+                </div> -->
             </form>
+            <div class="col-12 buttonDiv">
+                    <button name="signup" class="btn btn-primary loginBtn" id="signUpBtn">Signup</button>
+            </div>
             <!-- {faildStatus ? <p class="warning">{desc}</p> :
                     <div />} -->
-
         </div>
     </div>
 
-    </div>
+    <!-- </div> -->
+    <!-- <script type="text/javascript" src="assets/js/login.js"></script> -->
+    <script>
+        document.getElementById("signUpBtn").onclick = function(event) {
+            event.preventDefault();
+            console.log("signup clicked");
+            window.location = "sign_up_page.php";
+        };
+    </script>
 </body>
 
 </html>

@@ -17,8 +17,8 @@ print_r($current_user_id);
 
 
 
-$user_name = $password = $password_re = $about_1 = $about_2 = $about_3 = $resume = $main_profession = $phone = $birthday = $city = $age = $degree = $website = $email = $facts = $clients = $hours = $workers = $skills = $portfolio = $profile_photo_url = $github_url = $linkedin_url = $instagram_url = '';
-$errors = array('user_name' => '', 'password' => '', 'password_re' => '', 'degree' => '', 'email' => '', 'resume' => '', 'about_1' => '', 'about_2' => '', 'about_3' => '', 'main_profession' => '', 'birthday' => '', 'website' => '', 'phone' => '', 'city' => '', 'age' => '', 'facts' => '', 'clients' => '', 'projects' => '', 'hours' => '', 'workers' => '', 'skills' => '', 'portfolio' => '', 'services' => '');
+$user_name = $password = $password_re = $about_1 = $about_2 = $about_3  = $main_profession = $phone = $birthday = $city = $age = $degree = $website = $email = $facts = $clients = $hours = $workers = $skills = $portfolio = $profile_photo_url = $github_url = $linkedin_url = $instagram_url = '';
+$errors = array('user_name' => '', 'password' => '', 'password_re' => '', 'degree' => '', 'email' => '', 'about_1' => '', 'about_2' => '', 'about_3' => '', 'main_profession' => '', 'birthday' => '', 'website' => '', 'phone' => '', 'city' => '', 'age' => '', 'facts' => '', 'clients' => '', 'projects' => '', 'hours' => '', 'workers' => '', 'skills' => '', 'portfolio' => '', 'services' => '');
 
 if (isset($_POST['login'])) {
     header('Location: index.php');
@@ -269,8 +269,8 @@ if (isset($_POST['submit'])) {
 
 
         //new user data insert query 
-        $register_new_user_query = "INSERT INTO users(`id`, `name`, `about_1`, `about_2`, `about_3`, `main_profession`, `birthday`, `website`, `phone`, `city`, `age`, `degree`, `email`,`password`, `facts`, `clients`, `projects`, `hours`, `workers`, `skills`, `portfolio`, `services`, `resume`, `profile_photo_url`, `github_url`, `linkedin_url`, `instagram_url`)
-         VALUES (NULL, '$name', '$about_1', '$about_2', '$about_3', '$main_profession', '$birthday', '$website', '$phone', '$city', '$age', '$degree', '$email','$password', '$facts', '$clients', '$projects', '$hours', '$workers', '$skills', '$portfolio', '$services', '$resume','$profile_photo_url', '$github_url', '$linkedin_url', '$instagram_url')";
+        $register_new_user_query = "INSERT INTO users(`id`, `name`, `about_1`, `about_2`, `about_3`, `main_profession`, `birthday`, `website`, `phone`, `city`, `age`, `degree`, `email`,`password`, `facts`, `clients`, `projects`, `hours`, `workers`, `skills`, `portfolio`, `services`, `profile_photo_url`, `github_url`, `linkedin_url`, `instagram_url`)
+         VALUES (NULL, '$name', '$about_1', '$about_2', '$about_3', '$main_profession', '$birthday', '$website', '$phone', '$city', '$age', '$degree', '$email','$password', '$facts', '$clients', '$projects', '$hours', '$workers', '$skills', '$portfolio', '$services','$profile_photo_url', '$github_url', '$linkedin_url', '$instagram_url')";
         // echo ($register_new_user_query);
 
         //professions instertion query
@@ -381,7 +381,7 @@ if (isset($_POST['submit'])) {
                 <!-- password -->
                 <div class="col-md-6">
                     <label for="password" class="form-label">Password</label>
-                    <input type="text" class="form-control" name="password" id="password" value="<?php echo htmlspecialchars($password) ?>" required>
+                    <input type="password" class="form-control" name="password" id="password" value="<?php echo htmlspecialchars($password) ?>" required>
                     <div class="invalid-feedback">
                         <?php echo $errors['password']; ?>
                     </div>
@@ -390,7 +390,7 @@ if (isset($_POST['submit'])) {
                 <!-- confirm_password -->
                 <div class="col-md-6">
                     <label for="password_re" class="form-label">Confirm Password</label>
-                    <input type="text" class="form-control" name="password_re" id="password_re" value="<?php echo htmlspecialchars($password_re) ?>" required>
+                    <input type="password" class="form-control" name="password_re" id="password_re" value="<?php echo htmlspecialchars($password_re) ?>" required>
                     <div class="invalid-feedback">
                         <?php echo $errors['password_re']; ?>
                     </div>
@@ -424,7 +424,7 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- main-profession  -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="main_profession" class="form-label">Main Profession</label>
                     <input type="text" class="form-control" name="main_profession" id="main_profession" value="<?php echo htmlspecialchars($main_profession) ?>" required>
                     <div class="invalid-feedback">
@@ -433,7 +433,7 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- birthday -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="birthday" class="form-label">Birthday</label>
                     <input type="text" class="form-control" name="birthday" id="datepicker" value="<?php echo htmlspecialchars($birthday) ?>" required>
                     <div class="invalid-feedback">
@@ -442,7 +442,7 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- website -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="website" class="form-label">Website</label>
                     <input type="text" class="form-control" name="website" id="website" value="<?php echo htmlspecialchars($website) ?>" required>
                     <div class="invalid-feedback">
@@ -451,7 +451,7 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- phone -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="phone" class="form-label">Phone</label>
                     <input type="number" class="form-control" name="phone" id="phone" value="<?php echo htmlspecialchars($phone) ?>" required>
                     ` <div class="invalid-feedback">
@@ -460,25 +460,25 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- degree -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="degree" class="form-label">Degree</label>
                     <input type="text" class="form-control" name="degree" id="degree" value="<?php echo htmlspecialchars($degree) ?>" required>
                     ` <div class="invalid-feedback">
-                        <?php echo $errors['phone']; ?>
+                        <?php echo $errors['degree']; ?>
                     </div>
                 </div>
 
                 <!-- email -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="text" class="form-control" name="email" id="email" value="<?php echo htmlspecialchars($email) ?>" required>
                     ` <div class="invalid-feedback">
-                        <?php echo $errors['phone']; ?>
+                        <?php echo $errors['email']; ?>
                     </div>
                 </div>
 
                 <!-- city -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="city" class="form-label">City</label>
                     <input type="text" class="form-control" name="city" id="city" value="<?php echo htmlspecialchars($city) ?>" required>
                     <div class="invalid-feedback">
@@ -487,7 +487,7 @@ if (isset($_POST['submit'])) {
                 </div>
 
                 <!-- age  -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="age" class="form-label">Age</label>
                     <input type="number" class="form-control" name="age" id="age" value="<?php echo htmlspecialchars($age) ?>" required>
                     <div class="invalid-feedback">
@@ -562,15 +562,6 @@ if (isset($_POST['submit'])) {
                 <div class="col-md-12">
                     <label for="services" class="form-label">Services</label>
                     <textarea type="text" class="form-control" name="services" id="services" value="<?php echo htmlspecialchars($services) ?>" required></textarea>
-                    <div class="invalid-feedback">
-                        <p><?php echo $errors['services']; ?></p>
-                    </div>
-                </div>
-
-                <!-- resume -->
-                <div class="col-md-12">
-                    <label for="resume" class="form-label">Resume</label>
-                    <textarea type="text" class="form-control" name="resume" id="resume" value="<?php echo htmlspecialchars($resume) ?>" required></textarea>
                     <div class="invalid-feedback">
                         <p><?php echo $errors['services']; ?></p>
                     </div>

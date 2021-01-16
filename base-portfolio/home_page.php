@@ -14,7 +14,7 @@ include('utils/user_details.php');
 // print_r($professions);
 // print_r($services);
 // print_r($skills);
-print_r($resume);
+// print_r($resume);
 
 
 
@@ -91,7 +91,7 @@ mysqli_close($conn);
                 <h1 class="text-light"><a href="home_page.html"><?php echo $user_details[0]['name']; ?></a></h1>
                 <div class="social-links mt-3 text-center">
                     <!-- change to github icon -->
-                    <a href="<?php echo $user_details[0]['github_url']; ?>" class="twitter"><i class="bx bxl-twitter"></i></a>
+                    <a href="<?php echo $user_details[0]['github_url']; ?>" class="github"><i class="bx bxl-github"></i></a>
                     <a href="<?php echo $user_details[0]['instagram_url']; ?>" class="instagram"><i class="bx bxl-instagram"></i></a>
                     <a href="<?php echo $user_details[0]['linkedin_url']; ?>" class="linkedin"><i class="bx bxl-linkedin"></i></a>
                 </div>
@@ -116,7 +116,7 @@ mysqli_close($conn);
     <!-- End Header -->
 
     <!--  Hero Section  -->
-    <section id="hero" class="d-flex flex-column justify-content-center align-items-center">
+    <section id="herobackground" class="d-flex flex-column justify-content-center align-items-center">
         <div class="hero-container" data-aos="fade-in">
             <h1><?php echo $user_details[0]['name']; ?></h1>
             <p>I'm <span class="typed" data-typed-items="<?php echo $profession_string; ?>"></span></p>
@@ -255,7 +255,9 @@ mysqli_close($conn);
 
                 <div class="section-title">
                     <h2>Resume</h2>
-                    <p><?php echo $user_details[0]['resume']; ?></p>
+                    <!-- <p>
+                        <?php echo $user_details[0]['resume']; ?>
+                    </p> -->
                 </div>
 
                 <div class="row">
@@ -334,7 +336,7 @@ mysqli_close($conn);
                 <div class="row">
                     <?php foreach ($services as $service) { ?>
                         <div class="col-lg-4 col-md-6 icon-box" data-aos="fade-up">
-                            <div class="icon"><i class="icofont-computer"></i></div>
+                            <div class="icon"><i class="icofont-keyboard-alt"></i></div>
                             <h4 class="title"><a href=""><?php echo $service['service']; ?></a></h4>
                             <p class="description"><?php echo $service['description']; ?></p>
                         </div>
